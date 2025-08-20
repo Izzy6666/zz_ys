@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title> zz & ys Daily Recording</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body>
+        <!-- 背景音乐（默认静音自动播放，等待用户解锁） -->
+<audio id="bgm" src="assets/zz.mp3" preload="auto" loop playsinline muted></audio>
+
+<!-- 顶部浮动音乐按钮 -->
+<div id="musicGate"
+     style="position:fixed; right:16px; bottom:16px; z-index:9999; 
+            background:rgba(0,0,0,0.6); color:#fff; padding:10px 14px; 
+            border-radius:12px; cursor:pointer; user-select:none;">
+  ▶ 播放音乐
+</div>
+
+<script>
+  const audio = document.getElementById('bgm');
+  const gate  = document.getElementById('musicGate');
+
+  // 尝试静音自动播放（多数浏览器允许）
+  audio.play().catch(()=>{ /* 被拦了也没关系，等用户点 */ });
+
+  // 用户第一次交互后，解除静音并播放
+  const unlock = async () => {
+    try {
+      audio.muted = false;
+      await audio.play();
+      gate.textContent = '⏸ 暂停';
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown',   unlock);
+    } catch(e){ /* 某些奇葩环境下还要再点一次，算了 */ }
+  };
+  window.addEventListener('pointerdown', unlock, { once:false });
+  window.addEventListener('keydown',     unlock, { once:false });
+
+  // 点击浮窗切换播放/暂停
+  gate.addEventListener('click', async () => {
+    if (audio.paused) {
+      try {
+        await audio.play();
+        gate.textContent = '⏸ 暂停';
+      } catch (e) {
+        // 如果还在静音状态导致失败，强制解锁一次
+        audio.muted = false;
+        await audio.play();
+        gate.textContent = '⏸ 暂停';
+      }
+    } else {
+      audio.pause();
+      gate.textContent = '▶ 播放音乐';
+    }
+  });
+
+  // 页面可见性变化时的省电处理（可选）
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && !audio.paused) {
+      audio.pause();
+      gate.textContent = '▶ 播放音乐';
+    }
+  });
+
+  // iOS 小毛病：必须有 playsinline，且文件尽量是 AAC/MP3，码率别太奇怪
+</script>
+
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="index.html">开始旅程</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    菜单
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">首页</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="introus.html#puppy">关于小张</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="introus.html#me">关于小尹</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="introus.html">关于我们</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('assets/img/home_bg.JPG')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="site-heading">
+                            <h1>狗狗和猫猫</h1>
+                            <span class="subheading">记录我们生活的小网站</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content-->
+        <section style="background-color: #F0F2F5;">
+          <div class="container py-5">
+            <div class="main-timeline-2">
+              
+            <div class="timeline-2 left-2">
+                <div class="card">
+                  <img class="img-fluid" src="assets/img/home_library.jpg" alt="library" />
+                  <div class="card-body p-4">
+                    <h4 class="fw-bold mb-4">上海图书馆-东馆</h4>
+                        <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年6月29日</p>
+                        <p class="mb-0">小尹第一次见到小张，小张在准备面试，很认真，小尹有点儿喜欢，忍不住多看了几眼～然后我们的故事就开始啦～</p>
+                    
+                  </div>
+                </div>
+              </div>
+                
+              <div class="timeline-2 right-2">
+                <div class="card">
+                  <img class="img-fluid" src="assets/img/home_street.JPG" alt="street_vague" />
+                  <div class="card-body p-4">
+                    <a href="street.html">
+                    <h4 class="fw-bold mb-4">第一次给狗狗街拍➕去小尹家➕亲亲</h4>
+                    </a>
+                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年7月20日</p>
+                    <p class="mb-0">这是非常值得回忆的一天～因为这一天有大进展嗷～约好要给狗狗拍一组帅照，发现狗狗喜欢糊糊的照片！这天去了小尹家里，然后发生了一些不可描述的事情嗷呜～</p>
+                  </div>
+                </div>
+              </div>
+                
+              <div class="timeline-2 left-2">
+                <div class="card">
+                  <img class="img-fluid" src="assets/img/home_aijiang.jpg" alt="aijiang" />
+                  <div class="card-body p-4">
+                    <a href="">
+                    <h4 class="fw-bold mb-4">第一次蹦床</h4>
+                    </a>
+                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年7月26日-7月27日</p>
+                    <p class="mb-0">和小张第一次体验攀岩和蹦床～然后呢一起逛了Aldi，吃了神奇的炸鸡样子的冰淇淋～</p>
+                  </div>
+                </div>
+              </div>
+                
+              <div class="timeline-2 right-2">
+                <div class="card">
+                  <img class="img-fluid" src="assets/img/home_goddess.JPG" alt="goddess" />
+                  <div class="card-body p-4">
+                    <a href="selfie.html">
+                    <h4 class="fw-bold mb-4">第一次合作拍写真</h4>
+                    </a>
+                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月1日-8月2日</p>
+                    <p class="mb-0">中途经历了一些小小的折腾和打闹，但是每一次的小吵小闹在我看来都是增加了更多的牵绊，同时对对方更加了解一些～然后呢就是期待已久的写真啦～我的神明少年～一起逛了街，当了一下日本人～</p>
+                  </div>
+                </div>
+              </div>
+                
+              <div class="timeline-2 left-2">
+                <div class="card">
+                  <img class="img-fluid" src="assets/img/home_zhuzhu.JPG" alt="zhuzhu's_city" />
+                  <div class="card-body p-4">
+                    <a href="zhuzhu.html">
+                    <h4 class="fw-bold mb-4">第一次一起看展</h4>
+                    </a>
+                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月17日</p>
+                    <p class="mb-0">一起看了朱朱之城，见了小尹的朋友～这个展特别可爱，像小狗一样，即使打了很多怪，也能保持真挚和热忱～</p>
+                  </div>
+                </div>
+              </div>
+            
+            <div class="timeline-2 right-2">
+                <div class="card">
+                  <img class="img-fluid" src="assets/img/home_shoe.jpg" alt="gift" />
+                  <div class="card-body p-4">
+                      <a href="lalala.html">
+                    <h4 class="fw-bold mb-4">第一次过七夕～</h4>
+                        </a>
+                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月29日</p>
+                    <p class="mb-0">预测一下今天小狗会来找我～给小狗送fafa和这个网站表达我的心意啦~</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+        </section>
+        
+        
+        
+        <!-- Footer-->
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; zz & ys 2025</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
