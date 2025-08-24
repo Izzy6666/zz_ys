@@ -31,8 +31,8 @@
   const audio = document.getElementById('bgm');
   const gate  = document.getElementById('musicGate');
 
-  // 尝试静音自动播放（多数浏览器允许）
-  audio.play().catch(()=>{ /* 被拦了也没关系，等用户点 */ });
+  // 尝试静音自动播放
+  audio.play().catch(()=>{ /* 被拦了也没关系 */ });
 
   // 用户第一次交互后，解除静音并播放
   const unlock = async () => {
@@ -42,7 +42,7 @@
       gate.textContent = '⏸ 暂停';
       window.removeEventListener('pointerdown', unlock);
       window.removeEventListener('keydown',   unlock);
-    } catch(e){ /* 某些奇葩环境下还要再点一次，算了 */ }
+    } catch(e){ /* 某些奇葩环境下还要再点一次 */ }
   };
   window.addEventListener('pointerdown', unlock, { once:false });
   window.addEventListener('keydown',     unlock, { once:false });
@@ -65,7 +65,7 @@
     }
   });
 
-  // 页面可见性变化时的省电处理（可选）
+  // 页面可见性变化时的省电处理
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && !audio.paused) {
       audio.pause();
@@ -117,7 +117,8 @@
                 <div class="card">
                   <img class="img-fluid" src="img/home_library.jpg" alt="library" />
                   <div class="card-body p-4">
-                    <h4 class="fw-bold mb-4">上海图书馆-东馆</h4>
+                      <a href="lib.html">
+                    <h4 class="fw-bold mb-4">上海图书馆-梦开始的地方</h4></a>
                         <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年6月29日</p>
                         <p class="mb-0">小尹第一次见到小张，小张在准备面试，很认真，小尹有点儿喜欢，忍不住多看了几眼～然后我们的故事就开始啦～</p>
                     
@@ -177,7 +178,21 @@
                 </div>
               </div>
             
-            <div class="timeline-2 right-2">
+                       <div class="timeline-2 right-2">
+                <div class="card">
+                  <img class="img-fluid" src="img/home_child.jpg" alt="gift" />
+                  <div class="card-body p-4">
+                      <a href="child.html">
+                    <h4 class="fw-bold mb-4">狗狗的肚皮软软的，小尹的眼睛红红的</h4>
+                        </a>
+                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月23日</p>
+                    <p class="mb-0">狗狗跟我讲了很多很多他的故事。你知道吗，其实你那晚让我觉得你是个有温度的人～（看照片我有关注狗狗的pyq哦！）</p>
+                  </div>
+                </div>
+              </div>
+ 
+    
+            <div class="timeline-2 left-2">
                 <div class="card">
                   <img class="img-fluid" src="img/home_shoe.jpg" alt="gift" />
                   <div class="card-body p-4">

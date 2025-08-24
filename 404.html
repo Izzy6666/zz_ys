@@ -59,6 +59,7 @@
         <!-- 彩蛋文案：任选其一或自行改写 -->
         <div id="easterEgg">
           你找的页面不存在，但你找的人，一直在这里。
+            <br>但如果你出现在我家，或许能触发隐藏任务？
           <!-- 备选：但别担心，我准备好的惊喜从不丢失。 -->
           <!-- 备选：路径会走失，心意不会丢。 -->
             <div class="footer-note tiny">提示：按 H 键有小心心。</div>
@@ -94,5 +95,93 @@
     // 若部署到 GitHub Pages：将文件命名为 404.html 放在仓库根目录
     // 若只是想“假装 404”，可以直接链接到 /404.html；或链接到一个不存在的路径以触发 404
   </script>
+
+<!-- 发弹幕啦！！ -->
+<style>
+  .wish-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px}
+  .wish-box input,.wish-box textarea{width:100%;margin:.25rem 0 .6rem;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.15);color:#e9ecff;padding:.6rem}
+  .wish-box button{padding:.55rem 1rem;border-radius:8px;border:0;background:#ff6b6b;color:#111;font-weight:700}
+  .barrage-layer{position:fixed;left:0;right:0;top:0;height:0;pointer-events:none;z-index:9999}
+  .b-item{position:fixed;white-space:nowrap;font-weight:700;opacity:.95;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+</style>
+
+<div class="wish-box">
+  <h3 style="margin:0 0 .5rem">想对我说的话</h3>
+  <form id="wishForm" action="https://formspree.io/f/mkgvwrvj" method="POST">
+    <input type="text" name="name" placeholder="你的名字（可留空）">
+    <textarea name="message" rows="3" placeholder="把话写在这里…" required></textarea>
+    <!-- 你自己的邮箱可选：Formspree后台设置收件人，不必暴露在前端 -->
+    <button type="submit">发送 & 飘起来</button>
+  </form>
+  <small style="opacity:.7">提交后会发到我的邮箱，同时出现在页面弹幕里。</small>
+</div>
+
+<!-- 弹幕层 -->
+<div class="barrage-layer" aria-hidden="true"></div>
+
+<script>
+  // 简易弹幕
+  const COLORS = ["#ff6b6b","#ffd166","#4cc9f0","#b8f2e6","#f1c0e8","#caffbf","#bdb2ff"];
+  const layer = document.querySelector(".barrage-layer");
+  function shoot(text){
+    const el = document.createElement("div");
+    el.className = "b-item";
+    el.textContent = text;
+    el.style.top = (60 + Math.random() * (window.innerHeight - 160)) + "px";
+    el.style.left = window.innerWidth + "px";
+    el.style.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+    el.style.fontSize = (14 + Math.random()*10) + "px";
+    layer.appendChild(el);
+    const speed = 60 + Math.random()*80; // px/s
+    const total = window.innerWidth + el.offsetWidth + 40;
+    const start = performance.now();
+    (function anim(t0){
+      const dt = performance.now() - t0;
+      const x = window.innerWidth - dt/1000*speed;
+      el.style.transform = `translateX(${x}px)`;
+      if (x < -el.offsetWidth - 40) { el.remove(); return; }
+      requestAnimationFrame(()=>anim(start));
+    })(start);
+  }
+
+  // 本地持久化（刷新仍可见）
+  const KEY = "wish-bullets-v1";
+  const cache = JSON.parse(localStorage.getItem(KEY) || "[]");
+  cache.slice(-12).forEach(t => shoot(t)); // 只播最近12条
+
+  // 提交表单：一份发给你邮箱（Formspree），一份本地弹幕+缓存
+  const form = document.getElementById("wishForm");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const name = (fd.get("name") || "").toString().trim();
+    const msg  = (fd.get("message") || "").toString().trim();
+
+    if(!msg) return;
+
+    // 先乐观渲染
+    const text = (name ? `${name}：` : "") + msg;
+    shoot(text);
+    cache.push(text);
+    localStorage.setItem(KEY, JSON.stringify(cache.slice(-50))); // 最多留50条
+
+    // 发送到 Formspree（你的邮箱）
+    try {
+      const res = await fetch(form.action, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: fd
+      });
+      if(!res.ok){
+        console.warn("Formspree失败但本地已展示");
+      }
+      form.reset();
+    } catch(err){
+      console.warn("网络异常，已离线保存弹幕", err);
+      form.reset();
+    }
+  });
+</script>
+
 </body>
 </html>
