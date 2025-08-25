@@ -16,65 +16,57 @@
         <link href="css/styles.css" rel="stylesheet" />
     </head>
     <body>
-        <!-- 背景音乐（默认静音自动播放，等待用户解锁） -->
-<audio id="bgm" src="assets/zz.mp3" preload="auto" loop playsinline muted></audio>
+        <!-- 背景音乐 -->
+        <audio id="bgm" src="assets/zz.mp3" preload="auto" loop playsinline muted></audio>
+            <div id="musicGate"
+                 style="position:fixed; right:16px; bottom:16px; z-index:9999; 
+                        background:rgba(0,0,0,0.6); color:#fff; padding:10px 14px; 
+                        border-radius:12px; cursor:pointer; user-select:none;">
+              ▶ 播放音乐
+            </div>
 
-<!-- 顶部浮动音乐按钮 -->
-<div id="musicGate"
-     style="position:fixed; right:16px; bottom:16px; z-index:9999; 
-            background:rgba(0,0,0,0.6); color:#fff; padding:10px 14px; 
-            border-radius:12px; cursor:pointer; user-select:none;">
-  ▶ 播放音乐
-</div>
+        <script>
+          const audio = document.getElementById('bgm');
+          const gate  = document.getElementById('musicGate');
 
-<script>
-  const audio = document.getElementById('bgm');
-  const gate  = document.getElementById('musicGate');
+          audio.play().catch(()=>{ /* 被拦了也没关系 */ });
 
-  // 尝试静音自动播放
-  audio.play().catch(()=>{ /* 被拦了也没关系 */ });
+          const unlock = async () => {
+            try {
+              audio.muted = false;
+              await audio.play();
+              gate.textContent = '⏸ 暂停';
+              window.removeEventListener('pointerdown', unlock);
+              window.removeEventListener('keydown',   unlock);
+            } catch(e){ /* 某些奇葩环境下还要再点一次 */ }
+          };
+          window.addEventListener('pointerdown', unlock, { once:false });
+          window.addEventListener('keydown',     unlock, { once:false });
 
-  // 用户第一次交互后，解除静音并播放
-  const unlock = async () => {
-    try {
-      audio.muted = false;
-      await audio.play();
-      gate.textContent = '⏸ 暂停';
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('keydown',   unlock);
-    } catch(e){ /* 某些奇葩环境下还要再点一次 */ }
-  };
-  window.addEventListener('pointerdown', unlock, { once:false });
-  window.addEventListener('keydown',     unlock, { once:false });
+          gate.addEventListener('click', async () => {
+            if (audio.paused) {
+              try {
+                await audio.play();
+                gate.textContent = '⏸ 暂停';
+              } catch (e) {
+                // 如果还在静音状态导致失败，强制解锁一次
+                audio.muted = false;
+                await audio.play();
+                gate.textContent = '⏸ 暂停';
+              }
+            } else {
+              audio.pause();
+              gate.textContent = '▶ 播放音乐';
+            }
+          });
 
-  // 点击浮窗切换播放/暂停
-  gate.addEventListener('click', async () => {
-    if (audio.paused) {
-      try {
-        await audio.play();
-        gate.textContent = '⏸ 暂停';
-      } catch (e) {
-        // 如果还在静音状态导致失败，强制解锁一次
-        audio.muted = false;
-        await audio.play();
-        gate.textContent = '⏸ 暂停';
-      }
-    } else {
-      audio.pause();
-      gate.textContent = '▶ 播放音乐';
-    }
-  });
-
-  // 页面可见性变化时的省电处理
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && !audio.paused) {
-      audio.pause();
-      gate.textContent = '▶ 播放音乐';
-    }
-  });
-
-  
-</script>
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden && !audio.paused) {
+              audio.pause();
+              gate.textContent = '▶ 播放音乐';
+            }
+          });
+        </script>
 
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
@@ -113,98 +105,97 @@
           <div class="container py-5">
             <div class="main-timeline-2">
               
-            <div class="timeline-2 left-2">
-                <div class="card">
-                  <img class="img-fluid" src="img/home_library.jpg" alt="library" />
-                  <div class="card-body p-4">
-                      <a href="lib.html">
-                    <h4 class="fw-bold mb-4">上海图书馆-梦开始的地方</h4></a>
-                        <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年6月29日</p>
-                        <p class="mb-0">小尹第一次见到小张，小张在准备面试，很认真，小尹有点儿喜欢，忍不住多看了几眼～然后我们的故事就开始啦～</p>
-                    
+                <div class="timeline-2 left-2">
+                    <div class="card">
+                      <img class="img-fluid" src="img/home_library.jpg" alt="library" />
+                      <div class="card-body p-4">
+                          <a href="lib.html">
+                        <h4 class="fw-bold mb-4">上海图书馆-梦开始的地方</h4></a>
+                            <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年6月29日</p>
+                            <p class="mb-0">小尹第一次见到小张，小张在准备面试，很认真，小尹有点儿喜欢，忍不住多看了几眼～然后我们的故事就开始啦～</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-                
-              <div class="timeline-2 right-2">
-                <div class="card">
-                  <img class="img-fluid" src="img/home_street.jpg" alt="street_vague" />
-                  <div class="card-body p-4">
-                    <a href="street.html">
-                    <h4 class="fw-bold mb-4">第一次给狗狗街拍➕去小尹家➕亲亲</h4>
-                    </a>
-                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年7月20日</p>
-                    <p class="mb-0">这是非常值得回忆的一天～因为这一天有大进展嗷～约好要给狗狗拍一组帅照，发现狗狗喜欢糊糊的照片！这天去了小尹家里，然后发生了一些不可描述的事情嗷呜～</p>
-                  </div>
-                </div>
-              </div>
-                
-              <div class="timeline-2 left-2">
-                <div class="card">
-                  <img class="img-fluid" src="img/home_aijiang.jpg" alt="aijiang" />
-                  <div class="card-body p-4">
-                    <a href="jump.html">
-                    <h4 class="fw-bold mb-4">第一次蹦床</h4>
-                    </a>
-                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年7月26日-7月27日</p>
-                    <p class="mb-0">和小张第一次体验攀岩和蹦床～然后呢一起逛了Aldi，吃了神奇的炸鸡样子的冰淇淋～</p>
-                  </div>
-                </div>
-              </div>
-                
-              <div class="timeline-2 right-2">
-                <div class="card">
-                  <img class="img-fluid" src="img/home_goddess.jpg" alt="goddess" />
-                  <div class="card-body p-4">
-                    <a href="selfie.html">
-                    <h4 class="fw-bold mb-4">第一次合作拍写真</h4>
-                    </a>
-                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月1日-8月2日</p>
-                    <p class="mb-0">中途经历了一些小小的折腾和打闹，但是每一次的小吵小闹在我看来都是增加了更多的牵绊，同时对对方更加了解一些～然后呢就是期待已久的写真啦～我的神明少年～一起逛了街，当了一下日本人～</p>
-                  </div>
-                </div>
-              </div>
-                
-              <div class="timeline-2 left-2">
-                <div class="card">
-                  <img class="img-fluid" src="img/home_zhuzhu.jpg" alt="zhuzhu's_city" />
-                  <div class="card-body p-4">
-                    <a href="zhuzhu.html">
-                    <h4 class="fw-bold mb-4">第一次一起看展</h4>
-                    </a>
-                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月17日</p>
-                    <p class="mb-0">一起看了朱朱之城，见了小尹的朋友～这个展特别可爱，像小狗一样，即使打了很多怪，也能保持真挚和热忱～</p>
-                  </div>
-                </div>
-              </div>
-            
-                       <div class="timeline-2 right-2">
-                <div class="card">
-                  <img class="img-fluid" src="img/home_child.jpg" alt="gift" />
-                  <div class="card-body p-4">
-                      <a href="child.html">
-                    <h4 class="fw-bold mb-4">狗狗的肚皮软软的，小尹的眼睛红红的</h4>
+
+                  <div class="timeline-2 right-2">
+                    <div class="card">
+                      <img class="img-fluid" src="img/home_street.jpg" alt="street_vague" />
+                      <div class="card-body p-4">
+                        <a href="street.html">
+                        <h4 class="fw-bold mb-4">第一次给狗狗街拍➕去小尹家➕亲亲</h4>
                         </a>
-                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月23日</p>
-                    <p class="mb-0">狗狗跟我讲了很多很多他的故事。你知道吗，其实你那晚让我觉得你是个有温度的人～（看照片我有关注狗狗的pyq哦！）</p>
+                        <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年7月20日</p>
+                        <p class="mb-0">这是非常值得回忆的一天～因为这一天有大进展嗷～约好要给狗狗拍一组帅照，发现狗狗喜欢糊糊的照片！这天去了小尹家里，然后发生了一些不可描述的事情嗷呜～</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
- 
-    
-            <div class="timeline-2 left-2">
-                <div class="card">
-                  <img class="img-fluid" src="img/home_shoe.jpg" alt="gift" />
-                  <div class="card-body p-4">
-                      <a href="404.html">
-                    <h4 class="fw-bold mb-4">第一次过七夕～</h4>
+
+                  <div class="timeline-2 left-2">
+                    <div class="card">
+                      <img class="img-fluid" src="img/home_aijiang.jpg" alt="aijiang" />
+                      <div class="card-body p-4">
+                        <a href="jump.html">
+                        <h4 class="fw-bold mb-4">第一次蹦床</h4>
                         </a>
-                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月29日</p>
-                    <p class="mb-0">今天是大家的七夕，也是我们相识两个月的纪念日哦～预测一下今天小狗会来找我～给小狗送fafa和这个网站表达我的心意啦~</p>
+                        <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年7月26日-7月27日</p>
+                        <p class="mb-0">和小张第一次体验攀岩和蹦床～然后呢一起逛了Aldi，吃了神奇的炸鸡样子的冰淇淋～</p>
+                      </div>
+                    </div>
                   </div>
+
+                  <div class="timeline-2 right-2">
+                    <div class="card">
+                      <img class="img-fluid" src="img/home_goddess.jpg" alt="goddess" />
+                      <div class="card-body p-4">
+                        <a href="selfie.html">
+                        <h4 class="fw-bold mb-4">第一次合作拍写真</h4>
+                        </a>
+                        <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月1日-8月2日</p>
+                        <p class="mb-0">中途经历了一些小小的折腾和打闹，但是每一次的小吵小闹在我看来都是增加了更多的牵绊，同时对对方更加了解一些～然后呢就是期待已久的写真啦～我的神明少年～一起逛了街，当了一下日本人～</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="timeline-2 left-2">
+                    <div class="card">
+                      <img class="img-fluid" src="img/home_zhuzhu.jpg" alt="zhuzhu's_city" />
+                      <div class="card-body p-4">
+                        <a href="zhuzhu.html">
+                        <h4 class="fw-bold mb-4">第一次一起看展</h4>
+                        </a>
+                        <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月17日</p>
+                        <p class="mb-0">一起看了朱朱之城，见了小尹的朋友～这个展特别可爱，像小狗一样，即使打了很多怪，也能保持真挚和热忱～</p>
+                      </div>
+                    </div>
+                  </div>
+
+                    <div class="timeline-2 right-2">
+                        <div class="card">
+                          <img class="img-fluid" src="img/home_child.jpg" alt="gift" />
+                          <div class="card-body p-4">
+                              <a href="child.html">
+                            <h4 class="fw-bold mb-4">狗狗的肚皮软软的，小尹的眼睛红红的</h4>
+                                </a>
+                            <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月23日</p>
+                            <p class="mb-0">狗狗跟我讲了很多很多他的故事。你知道吗，其实你那晚让我觉得你是个有温度的人～（看照片我有关注狗狗的pyq哦！）</p>
+                          </div>
+                        </div>
+                  </div>
+
+
+                    <div class="timeline-2 left-2">
+                        <div class="card">
+                          <img class="img-fluid" src="img/home_shoe.jpg" alt="gift" />
+                          <div class="card-body p-4">
+                              <a href="404.html">
+                            <h4 class="fw-bold mb-4">第一次过七夕～</h4>
+                                </a>
+                            <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i>2025年8月29日</p>
+                            <p class="mb-0">预测一下今天小狗会来找我～给小狗送fafa和这个网站表达我的心意啦~</p>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
             </div>
         </section>
         
