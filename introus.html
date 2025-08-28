@@ -31,6 +31,58 @@
         </style>
 	</head>
 	<body class="is-preload">
+		<!-- 背景音乐 -->
+        <audio id="bgm" src="assets/baby.mp3" preload="auto" loop playsinline muted></audio>
+            <div id="musicGate"
+                 style="position:fixed; right:16px; bottom:16px; z-index:9999; 
+                        background:rgba(0,0,0,0.6); color:#fff; padding:10px 14px; 
+                        border-radius:12px; cursor:pointer; user-select:none;">
+              ▶ 播放音乐
+            </div>
+
+        <script>
+          const audio = document.getElementById('bgm');
+          const gate  = document.getElementById('musicGate');
+
+          audio.play().catch(()=>{ /* 被拦了也没关系 */ });
+
+          const unlock = async () => {
+            try {
+              audio.muted = false;
+              await audio.play();
+              gate.textContent = '⏸ 暂停';
+              window.removeEventListener('pointerdown', unlock);
+              window.removeEventListener('keydown',   unlock);
+            } catch(e){ /* 某些奇葩环境下还要再点一次 */ }
+          };
+          window.addEventListener('pointerdown', unlock, { once:false });
+          window.addEventListener('keydown',     unlock, { once:false });
+
+          gate.addEventListener('click', async () => {
+            if (audio.paused) {
+              try {
+                await audio.play();
+                gate.textContent = '⏸ 暂停';
+              } catch (e) {
+                // 如果还在静音状态导致失败，强制解锁一次
+                audio.muted = false;
+                await audio.play();
+                gate.textContent = '⏸ 暂停';
+              }
+            } else {
+              audio.pause();
+              gate.textContent = '▶ 播放音乐';
+            }
+          });
+
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden && !audio.paused) {
+              audio.pause();
+              gate.textContent = '▶ 播放音乐';
+            }
+          });
+        </script>
+
 		<!-- Page Wrapper -->
         <div id="page-wrapper">
             <!-- Wrapper -->
@@ -177,4 +229,5 @@
         <script src="assets/js/breakpoints.min.js"></script>
         <script src="assets/js/main.js"></script>
 	</body>
+
 </html>
