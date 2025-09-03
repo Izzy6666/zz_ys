@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title> 最后的最后 | 我们的时间轴</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+    </head>
+    <body>
+        
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="index.html">开始旅程</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    菜单
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">首页</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="introus.html#puppy">关于小张</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="introus.html#me">关于小尹</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="introus.html">关于我们</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    
+        <!-- Page Header-->
+        <header class="masthead" style="grey">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <h1>最后的最后</h1>
+                            <h2 class="subheading">希望用这首歌</h2>
+                            <span class="meta">记录一下刻骨铭心过的爱情</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content-->
+        <main class="container px-4 px-lg-5">
+            <article class="mb-4">
+                <div class="row justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="container px-4 py-5">
+                            <h2 class="fw-bold text-center">爱与自由</h2>
+                            <div style="max-width:720px;margin:24px auto;">
+                              <meting-js
+                                server="netease"
+                                type="song"
+                                id="2742900618"       
+                                lrc-type="1"        
+                                fixed="false"
+                                mini="false"        
+                                autoplay="false"
+                                mutex="true"
+                                preload="auto"
+                                theme="#d33a31">
+                              </meting-js>
+                            <p class="text-center">我们走到这一步
+                                却看不清归途
+                                <br>心里有太多话
+                                只能沉默交付
+
+                                <br><br>我还是深爱着你
+                                所以学会放手
+                                <br>把回忆都还给风
+                                不再追问以后
+                                <br>我爱你到最后
+                                也选择成全自由
+
+                                <br><br>原来爱不是拥有
+                                而是学会承受
+                                <br>痛过之后才明白
+                                释怀才是温柔
+
+                                <br><br>我还是深爱着你
+                                所以学会放手
+                                <br>把回忆都还给风
+                                不再追问以后
+                                <br>我爱你到最后
+                                也选择成全自由
+
+                                <br><br>谢谢你给的笑容
+                                我会带着走
+                                <br>带着无声的祝福
+                                慢慢向前走</p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </main>
+        
+        
+        <script>
+          const blueImage = document.getElementById("blueImage");
+          const blueVoice = document.getElementById("blueVoice");
+          const foxWhisper = document.getElementById("blueWhisper");
+
+          blueImage.addEventListener("click", () => {
+            if (blueVoice.paused) {
+              blueVoice.play();
+              blueImage.style.transform = "scale(1.1)";
+              blueWhisper.style.opacity = 1;
+            } else {
+              blueVoice.pause();
+              blueVoice.currentTime = 0;
+              blueImage.style.transform = "scale(1)";
+              blueWhisper.style.opacity = 0;
+            }
+          });
+        </script>
+
+
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="small text-center text-muted fst-italic">© Our Timeline</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
